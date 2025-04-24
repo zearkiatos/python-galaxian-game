@@ -45,27 +45,17 @@ def create_sprite(world: esper.World, position: pygame.Vector2, velocity: pygame
 def create_hunter_enemy(world: esper.World, position: pygame.Vector2, enemy_info: dict):
     enemy_sprite = ServiceLocator.images_service.get(enemy_info["image"])
     velocity = pygame.Vector2(0, 0)
-    size = enemy_sprite.get_size()
-    size = (size[0] / enemy_info["animations"]["number_frames"], size[1])
-    position = pygame.Vector2(position.x - (size[0]/2), position.y - (size[1]/2))
     enemy_entity = create_sprite(world, position, velocity, enemy_sprite)
-    world.add_component(enemy_entity, CTagEnemy())
-    world.add_component(enemy_entity, CTagEnemyHunter())
+    world.add_component(enemy_entity, CTagEnemy("Hunter"))
     world.add_component(enemy_entity, CAnimation(enemy_info["animations"]))
-    world.add_component(enemy_entity, CHunterState())
-    world.add_component(enemy_entity, CHunter(initial_position=position.copy()))
-    return enemy_entity
+    world.add_component(enemy_entity, CHunterState(position))
 
 def create_explosion(world: esper.World, position: pygame.Vector2, explosion_config: dict):
     explosion_sprite = ServiceLocator.images_service.get(explosion_config["image"])
     velocity = pygame.Vector2(0, 0)
-    size = explosion_sprite.get_size()
-    size = (size[0] / explosion_config["animations"]["number_frames"], size[1])
-    position = pygame.Vector2(position.x - (size[0]/2), position.y - (size[1]/2))
     explosion_entity = create_sprite(world, position, velocity, explosion_sprite)
     world.add_component(explosion_entity, CTagExplosion())
     world.add_component(explosion_entity, CAnimation(explosion_config["animations"]))
-    world.add_component(explosion_entity, CExplosionState())
     ServiceLocator.sounds_service.play(explosion_config["sound"])
     return explosion_entity
 
@@ -83,7 +73,7 @@ def create_enemy_square(world: esper.World, position: pygame.Vector2, enemy_info
         )
 
     enemy_entity = create_sprite(world, position, velocity, enemy_surface)
-    world.add_component(enemy_entity, CTagEnemy())
+    world.add_component(enemy_entity, CTagEnemy("Bouncer"))
     world.add_component(enemy_entity, CTagEnemyAsteroid())
     ServiceLocator.sounds_service.play(enemy_info["sound"])
     return enemy_entity

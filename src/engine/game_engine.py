@@ -10,7 +10,6 @@ from src.ecs.systems.s_bullet_limit import system_bullet_limit
 from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_enemy
 from src.ecs.systems.s_collision_player_enemy import system_collision_player_enemy
 from src.ecs.systems.s_explode import system_explode
-from src.ecs.systems.s_hunter_chase import system_hunter_chase
 from src.ecs.systems.s_hunter_limit import system_hunter_limit
 from src.ecs.systems.s_hunter_state import system_hunter_state
 from src.ecs.systems.s_input_player import system_input_player
@@ -77,7 +76,7 @@ class GameEngine:
     def _update(self):
         system_movement(self.ecs_world, self.delta_time)
         system_player_state(self.ecs_world)
-        system_hunter_state(self.ecs_world)
+        system_hunter_state(self.ecs_world, self._player_entity, self.enemies_config["Hunter"])
         system_screen_bounce(self.ecs_world, self.screen)
         system_enemy_spawner(self.ecs_world, self.enemies_config, self.delta_time)
         system_collision_player_enemy(self.ecs_world, self._player_entity, self.levels_config, self.explosion_config)
@@ -86,7 +85,6 @@ class GameEngine:
         system_player_limit(self.ecs_world, self.screen)
         system_hunter_limit(self.ecs_world, self.screen)
         system_animation(self.ecs_world, self.delta_time)
-        system_hunter_chase(self.ecs_world, self.enemies_config, self._player_entity)
         system_explode(self.ecs_world)
         self.ecs_world._clear_dead_entities()
 
