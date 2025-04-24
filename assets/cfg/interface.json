@@ -1,0 +1,12 @@
+{
+    "title": {
+        "font": "assets/fnt/Audiowide-Regular.ttf",
+        "text": "Python 🐍 Galaxian 🚀🛸☄️ game - Exercise 4",
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "size": 12
+    }
+}

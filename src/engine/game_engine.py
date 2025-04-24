@@ -4,7 +4,7 @@ import asyncio
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
 from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
-from src.ecs.create.prefabric_creator import create_bullet_square, create_enemy_spawner, create_input_player, create_player_square
+from src.ecs.create.prefabric_creator import create_bullet_square, create_enemy_spawner, create_input_player, create_player_square, create_text
 from src.ecs.systems.s_animation import system_animation
 from src.ecs.systems.s_bullet_limit import system_bullet_limit
 from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_enemy
@@ -62,6 +62,7 @@ class GameEngine:
         self._player_component_surface = self.ecs_world.component_for_entity(self._player_entity, CSurface)
         create_enemy_spawner(self.ecs_world, self.levels_config)
         create_input_player(self.ecs_world)
+        create_text(self.ecs_world, pygame.Vector2(10,5), self.interface_config["title"])
 
     def _calculate_time(self):
         self.clock.tick(self.framerate)
@@ -104,6 +105,7 @@ class GameEngine:
         self.player_config = read_json_file("assets/cfg/player.json")
         self.bullet_config = read_json_file("assets/cfg/bullet.json")
         self.explosion_config = read_json_file("assets/cfg/explosion.json")
+        self.interface_config = read_json_file("assets/cfg/interface.json")
 
     def _do_action(self, c_input: CInputCommand, event: pygame.event.Event):
         if c_input.name == "PLAYER_LEFT":

@@ -17,7 +17,6 @@ from src.ecs.components.tags.c_tag_enemy import CTagEnemy
 from src.ecs.components.tags.c_tag_enemy_asteroid import CTagEnemyAsteroid
 from src.ecs.components.tags.c_tag_explosion import CTagExplosion
 from src.ecs.components.tags.c_tag_player import CTagPlayer
-from src.ecs.components.tags.c_tag_enemy_hunter import CTagEnemyHunter
 from src.engine.service_locator import ServiceLocator
 
 
@@ -138,3 +137,15 @@ def create_bullet_square(world: esper.World, bullet_info: dict, player_entity: i
     world.add_component(bullet_entity, CTagBullet())
     ServiceLocator.sounds_service.play(bullet_info["sound"])
     return bullet_entity
+
+def create_text(world: esper.World, position: pygame.Vector2, interface_config: dict):
+    font = ServiceLocator.fonts_service.get(interface_config["font"], interface_config["size"])
+    r,g,b = tuple(interface_config["color"].values())
+    text_surface = font.render(
+        interface_config["text"], True, pygame.Color(r,g,b))
+    entity = world.create_entity()
+    world.add_component(entity, CTransform(position))
+    world.add_component(entity, CSurface.from_surface(text_surface))
+    
+
+    
