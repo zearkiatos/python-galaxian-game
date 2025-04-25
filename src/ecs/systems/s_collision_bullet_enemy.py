@@ -17,5 +17,5 @@ def system_collision_bullet_enemy(world: esper.World, explosion_config:dict) -> 
             if bullet_rectangle.colliderect(enemy_rectangle):
                 world.delete_entity(bullet_entity)
                 world.delete_entity(enemy_entity)
-                create_explosion(world, c_bullet_transform.position.copy(), explosion_config)
+                create_explosion(world, c_enemy_transform.position.copy(), explosion_config)
                 break
