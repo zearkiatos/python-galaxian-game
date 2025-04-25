@@ -138,9 +138,10 @@ def create_bullet_square(world: esper.World, bullet_info: dict, player_entity: i
     ServiceLocator.sounds_service.play(bullet_info["sound"])
     return bullet_entity
 
-def create_text(world: esper.World, position: pygame.Vector2, interface_config: dict):
+def create_text(world: esper.World, interface_config: dict):
     font = ServiceLocator.fonts_service.get(interface_config["font"], interface_config["size"])
     r,g,b = tuple(interface_config["color"].values())
+    position = pygame.Vector2(tuple(interface_config["position"].values()))
     text_surface = font.render(
         interface_config["text"], True, pygame.Color(r,g,b))
     entity = world.create_entity()

@@ -21,10 +21,38 @@
             "g": 255,
             "b": 0
         },
-        "size": 9,
+        "size": 10,
         "position": {
             "x": 10,
             "y": 30
+        }
+    },
+    "special": {
+        "font": "assets/fnt/Audiowide-Regular.ttf",
+        "text": "Special",
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "size": 10,
+        "position": {
+            "x": 10,
+            "y": 320
+        }
+    },
+    "special_value": {
+        "font": "assets/fnt/Audiowide-Regular.ttf",
+        "text": "100%",
+        "color": {
+            "r": 0,
+            "g": 255,
+            "b": 0
+        },
+        "size": 9,
+        "position": {
+            "x": 10,
+            "y": 330
         }
     }
 }
