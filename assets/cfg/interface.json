@@ -8,5 +8,15 @@
             "b": 255
         },
         "size": 12
+    },
+    "subtitle": {
+        "font": "assets/fnt/Audiowide-Regular.ttf",
+        "text": "Controls: Arrows, normal click, right click",
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 0
+        },
+        "size": 9
     }
 }
