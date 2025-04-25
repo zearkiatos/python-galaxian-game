@@ -104,6 +104,10 @@ def create_input_player(world: esper.World):
     input_right = world.create_entity()
     input_up = world.create_entity()
     input_down = world.create_entity()
+    input_WASD_left = world.create_entity()
+    input_WASD_right = world.create_entity()
+    input_WASD_up = world.create_entity()
+    input_WASD_down = world.create_entity()
     input_right_mouse = world.create_entity()
     input_pause = world.create_entity()
     world.add_component(input_left, CInputCommand(
@@ -113,6 +117,13 @@ def create_input_player(world: esper.World):
     world.add_component(input_up, CInputCommand("PLAYER_UP", pygame.K_UP))
     world.add_component(input_down, CInputCommand(
         "PLAYER_DOWN", pygame.K_DOWN))
+    world.add_component(input_WASD_left, CInputCommand(
+        "PLAYER_LEFT", pygame.K_a))
+    world.add_component(input_WASD_right, CInputCommand(
+        "PLAYER_RIGHT", pygame.K_d))
+    world.add_component(input_WASD_up, CInputCommand("PLAYER_UP", pygame.K_w))
+    world.add_component(input_WASD_down, CInputCommand(
+        "PLAYER_DOWN", pygame.K_s))
     world.add_component(input_right_mouse, CInputCommand(
         "PLAYER_FIRE", pygame.BUTTON_RIGHT))
     world.add_component(input_pause, CInputCommand("PAUSE", pygame.K_p))
