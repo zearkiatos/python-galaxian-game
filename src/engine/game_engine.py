@@ -62,8 +62,8 @@ class GameEngine:
         self._player_component_surface = self.ecs_world.component_for_entity(self._player_entity, CSurface)
         create_enemy_spawner(self.ecs_world, self.levels_config)
         create_input_player(self.ecs_world)
-        create_text(self.ecs_world, pygame.Vector2(10,5), self.interface_config["title"])
-        create_text(self.ecs_world, pygame.Vector2(10,30), self.interface_config["subtitle"])
+        create_text(self.ecs_world, pygame.Vector2(self.interface_config["title"]["position"]["x"],self.interface_config["title"]["position"]["y"]), self.interface_config["title"])
+        create_text(self.ecs_world, pygame.Vector2(self.interface_config["subtitle"]["position"]["x"],self.interface_config["subtitle"]["position"]["y"]), self.interface_config["subtitle"])
 
     def _calculate_time(self):
         self.clock.tick(self.framerate)
