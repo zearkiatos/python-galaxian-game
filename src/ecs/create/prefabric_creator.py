@@ -105,6 +105,7 @@ def create_input_player(world: esper.World):
     input_up = world.create_entity()
     input_down = world.create_entity()
     input_right_mouse = world.create_entity()
+    input_pause = world.create_entity()
     world.add_component(input_left, CInputCommand(
         "PLAYER_LEFT", pygame.K_LEFT))
     world.add_component(input_right, CInputCommand(
@@ -114,6 +115,7 @@ def create_input_player(world: esper.World):
         "PLAYER_DOWN", pygame.K_DOWN))
     world.add_component(input_right_mouse, CInputCommand(
         "PLAYER_FIRE", pygame.BUTTON_RIGHT))
+    world.add_component(input_pause, CInputCommand("PAUSE", pygame.K_p))
 
 
 def create_bullet_square(world: esper.World, bullet_info: dict, player_entity: int, mouse_position: pygame.Vector2) -> int:
@@ -138,15 +140,23 @@ def create_bullet_square(world: esper.World, bullet_info: dict, player_entity: i
     ServiceLocator.sounds_service.play(bullet_info["sound"])
     return bullet_entity
 
-def create_text(world: esper.World, interface_config: dict):
+def create_text(world: esper.World, interface_config: dict, position: pygame.Vector2 = None) -> int:
     font = ServiceLocator.fonts_service.get(interface_config["font"], interface_config["size"])
     r,g,b = tuple(interface_config["color"].values())
-    position = pygame.Vector2(tuple(interface_config["position"].values()))
+    if not position:
+        if interface_config["position"] is None:
+            position = pygame.Vector2(0, 0)
+        else:
+            position = pygame.Vector2(tuple(interface_config["position"].values()))
+    else:
+        position = pygame.Vector2(position.x, position.y)
     text_surface = font.render(
         interface_config["text"], True, pygame.Color(r,g,b))
     entity = world.create_entity()
     world.add_component(entity, CTransform(position))
     world.add_component(entity, CSurface.from_surface(text_surface))
+
+    return entity
     
 
     
