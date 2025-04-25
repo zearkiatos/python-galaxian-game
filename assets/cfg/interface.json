@@ -1,7 +1,7 @@
 {
     "title": {
         "font": "assets/fnt/Audiowide-Regular.ttf",
-        "text": "Python 🐍 Galaxian 🚀🛸☄️ game - Exercise 4",
+        "text": "PYTHON 🐍 GALAXIAN 🚀🛸☄️ GAME - EXERCISE 4",
         "color": {
             "r": 255,
             "g": 255,
@@ -29,13 +29,13 @@
     },
     "special": {
         "font": "assets/fnt/Audiowide-Regular.ttf",
-        "text": "Special",
+        "text": "SPECIAL",
         "color": {
             "r": 255,
             "g": 255,
             "b": 255
         },
-        "size": 10,
+        "size": 12,
         "position": {
             "x": 10,
             "y": 320
@@ -49,7 +49,7 @@
             "g": 255,
             "b": 0
         },
-        "size": 9,
+        "size": 10,
         "position": {
             "x": 10,
             "y": 330
