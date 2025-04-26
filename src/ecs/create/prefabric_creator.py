@@ -8,6 +8,7 @@ from src.ecs.components.c_hunter import CHunter
 from src.ecs.components.c_hunter_state import CHunterState
 from src.ecs.components.c_input_command import CInputCommand
 from src.ecs.components.c_player_state import CPlayerState
+from src.ecs.components.c_special_bullet_state import CSpecialBulletState
 from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
@@ -17,6 +18,7 @@ from src.ecs.components.tags.c_tag_enemy import CTagEnemy
 from src.ecs.components.tags.c_tag_enemy_asteroid import CTagEnemyAsteroid
 from src.ecs.components.tags.c_tag_explosion import CTagExplosion
 from src.ecs.components.tags.c_tag_player import CTagPlayer
+from src.ecs.components.tags.c_tag_special_bullet import CTagSpecialBullet
 from src.engine.service_locator import ServiceLocator
 
 
@@ -108,24 +110,19 @@ def create_input_player(world: esper.World):
     input_WASD_right = world.create_entity()
     input_WASD_up = world.create_entity()
     input_WASD_down = world.create_entity()
-    input_right_mouse = world.create_entity()
     input_pause = world.create_entity()
-    world.add_component(input_left, CInputCommand(
-        "PLAYER_LEFT", pygame.K_LEFT))
-    world.add_component(input_right, CInputCommand(
-        "PLAYER_RIGHT", pygame.K_RIGHT))
+    input_left_mouse = world.create_entity()
+    input_right_mouse = world.create_entity()
+    world.add_component(input_left, CInputCommand("PLAYER_LEFT", pygame.K_LEFT))
+    world.add_component(input_right, CInputCommand("PLAYER_RIGHT", pygame.K_RIGHT))
     world.add_component(input_up, CInputCommand("PLAYER_UP", pygame.K_UP))
-    world.add_component(input_down, CInputCommand(
-        "PLAYER_DOWN", pygame.K_DOWN))
-    world.add_component(input_WASD_left, CInputCommand(
-        "PLAYER_LEFT", pygame.K_a))
-    world.add_component(input_WASD_right, CInputCommand(
-        "PLAYER_RIGHT", pygame.K_d))
+    world.add_component(input_down, CInputCommand("PLAYER_DOWN", pygame.K_DOWN))
+    world.add_component(input_WASD_left, CInputCommand("PLAYER_LEFT", pygame.K_a))
+    world.add_component(input_WASD_right, CInputCommand("PLAYER_RIGHT", pygame.K_d))
     world.add_component(input_WASD_up, CInputCommand("PLAYER_UP", pygame.K_w))
-    world.add_component(input_WASD_down, CInputCommand(
-        "PLAYER_DOWN", pygame.K_s))
-    world.add_component(input_right_mouse, CInputCommand(
-        "PLAYER_FIRE", pygame.BUTTON_RIGHT))
+    world.add_component(input_WASD_down, CInputCommand("PLAYER_DOWN", pygame.K_s))
+    world.add_component(input_left_mouse, CInputCommand("PLAYER_FIRE", 1))
+    world.add_component(input_right_mouse, CInputCommand("PLAYER_SPECIAL_FIRE", 3))
     world.add_component(input_pause, CInputCommand("PAUSE", pygame.K_p))
 
 
@@ -150,6 +147,34 @@ def create_bullet_square(world: esper.World, bullet_info: dict, player_entity: i
     world.add_component(bullet_entity, CTagBullet())
     ServiceLocator.sounds_service.play(bullet_info["sound"])
     return bullet_entity
+
+def create_special_bullet(world: esper.World, position_dispersed: pygame.Vector2, special_bullet_info: dict):
+    bullet_surface = ServiceLocator.images_service.get(special_bullet_info["image"])
+    bullet_components = world.get_components(CTransform, CSurface, CTagBullet)
+
+    for bullet_entity, (c_transform, c_surface, _) in bullet_components:
+            bullet_size = c_surface.surface.get_rect().size
+            position = pygame.Vector2(
+                c_transform.position.x +
+                c_surface.area.size[0]/2 - (bullet_size[0]/2),
+                c_transform.position.y +
+                c_surface.area.size[1]/2 - (bullet_size[1]/2)
+            )
+            x = 1
+            y = 1
+            if position_dispersed.x < 0:
+                x = -1
+            if position_dispersed.y < 0:
+                y = -1
+            
+            direction = (position_dispersed - position).normalize()
+            velocity = pygame.Vector2(x*direction.x * special_bullet_info["velocity"],
+                                      y*direction.y * special_bullet_info["velocity"])
+            entity = create_sprite(world, position, velocity, bullet_surface)
+            world.add_component(entity, CTagSpecialBullet())
+            world.add_component(entity, CSpecialBulletState(start_position=position.copy()))
+            world.delete_entity(bullet_entity)
+            ServiceLocator.sounds_service.play(special_bullet_info["sound"])
 
 def create_text(world: esper.World, interface_config: dict, position: pygame.Vector2 = None) -> int:
     font = ServiceLocator.fonts_service.get(interface_config["font"], interface_config["size"])

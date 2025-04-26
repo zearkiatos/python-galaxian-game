@@ -4,11 +4,12 @@ import asyncio
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
 from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
-from src.ecs.create.prefabric_creator import create_bullet_square, create_enemy_spawner, create_input_player, create_player_square, create_text
+from src.ecs.create.prefabric_creator import create_bullet_square, create_enemy_spawner, create_input_player, create_player_square, create_special_bullet, create_text
 from src.ecs.systems.s_animation import system_animation
 from src.ecs.systems.s_bullet_limit import system_bullet_limit
 from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_enemy
 from src.ecs.systems.s_collision_player_enemy import system_collision_player_enemy
+from src.ecs.systems.s_collision_special_bullet_enemy import system_collision_special_bullet_enemy
 from src.ecs.systems.s_explode import system_explode
 from src.ecs.systems.s_hunter_limit import system_hunter_limit
 from src.ecs.systems.s_hunter_state import system_hunter_state
@@ -19,6 +20,7 @@ from src.ecs.systems.s_player_state import system_player_state
 from src.ecs.systems.s_rendering import system_rendering
 from src.ecs.systems.s_screen_bounce import system_screen_bounce
 from src.ecs.systems.s_enemy_spawner import system_enemy_spawner
+from src.ecs.systems.s_special_bullet_limit import system_special_bullet_limit
 from src.utils.file_handler import read_json_file
 from src.ecs.components.c_velocity import CVelocity
 from src.config.config import Config
@@ -96,12 +98,15 @@ class GameEngine:
                 self.ecs_world, self._player_entity, self.levels_config, self.explosion_config)
             system_collision_bullet_enemy(
                 self.ecs_world, self.explosion_config)
+            system_collision_special_bullet_enemy(
+                self.ecs_world, self.explosion_config)
             self.block_bullet = system_bullet_limit(
                 self.ecs_world, self.levels_config["player_spawn"], self.screen)
             system_player_limit(self.ecs_world, self.screen)
             system_hunter_limit(self.ecs_world, self.screen)
             system_animation(self.ecs_world, self.delta_time)
             system_explode(self.ecs_world)
+            system_special_bullet_limit(self.ecs_world)
         self.ecs_world._clear_dead_entities()
 
     def _draw(self):
@@ -121,6 +126,7 @@ class GameEngine:
         self.bullet_config = read_json_file("assets/cfg/bullet.json")
         self.explosion_config = read_json_file("assets/cfg/explosion.json")
         self.interface_config = read_json_file("assets/cfg/interface.json")
+        self.power_ups_config = read_json_file("assets/cfg/power_ups.json")
 
     def _do_action(self, c_input: CInputCommand, event: pygame.event.Event):
 
@@ -145,10 +151,20 @@ class GameEngine:
             elif c_input.phase == CommandPhase.END:
                 self._player_component_velocity.velocity.y -= self.player_config["input_velocity"]
         if c_input.name == "PLAYER_FIRE" and not self.pause:
-            if (c_input.phase == CommandPhase.START):
+            if c_input.phase == CommandPhase.START and (event.button == 1):
                 if not self.block_bullet:
                     create_bullet_square(
                         self.ecs_world, self.bullet_config, self._player_entity, event.pos)
+        if c_input.name == "PLAYER_SPECIAL_FIRE" and not self.pause:
+            if c_input.phase == CommandPhase.START and (event.button == 3):
+                create_special_bullet(
+                    self.ecs_world, pygame.Vector2(-90, 90), self.power_ups_config["special_bullet"])
+                create_special_bullet(
+                    self.ecs_world, pygame.Vector2(-90, -90), self.power_ups_config["special_bullet"])
+                create_special_bullet(
+                    self.ecs_world, pygame.Vector2(90, -90), self.power_ups_config["special_bullet"])
+                create_special_bullet(
+                    self.ecs_world, pygame.Vector2(90, 90), self.power_ups_config["special_bullet"])
 
         if c_input.name == "PAUSE":
             if c_input.phase == CommandPhase.START:
@@ -158,7 +174,8 @@ class GameEngine:
                     position = dimension.copy()
                     position.x = position.x / 2
                     position.y = position.y / 2
-                    self._paused_entity = create_text(self.ecs_world, self.interface_config["pause"], position)
+                    self._paused_entity = create_text(
+                        self.ecs_world, self.interface_config["pause"], position)
                 else:
                     self.ecs_world.delete_entity(self._paused_entity)
                     self._paused_entity = None
