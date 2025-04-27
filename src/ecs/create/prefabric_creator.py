@@ -8,6 +8,7 @@ from src.ecs.components.c_hunter import CHunter
 from src.ecs.components.c_hunter_state import CHunterState
 from src.ecs.components.c_input_command import CInputCommand
 from src.ecs.components.c_player_state import CPlayerState
+from src.ecs.components.c_special_bullet import CSpecialBullet
 from src.ecs.components.c_special_bullet_state import CSpecialBulletState
 from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
@@ -19,6 +20,7 @@ from src.ecs.components.tags.c_tag_enemy_asteroid import CTagEnemyAsteroid
 from src.ecs.components.tags.c_tag_explosion import CTagExplosion
 from src.ecs.components.tags.c_tag_player import CTagPlayer
 from src.ecs.components.tags.c_tag_special_bullet import CTagSpecialBullet
+from src.ecs.components.tags.c_tag_text import CTagText
 from src.engine.service_locator import ServiceLocator
 
 
@@ -172,7 +174,7 @@ def create_special_bullet(world: esper.World, position_dispersed: pygame.Vector2
                                       y*direction.y * special_bullet_info["velocity"])
             entity = create_sprite(world, position, velocity, bullet_surface)
             world.add_component(entity, CTagSpecialBullet())
-            world.add_component(entity, CSpecialBulletState(start_position=position.copy()))
+            world.add_component(entity, CSpecialBullet(start_position=position.copy()))
             world.delete_entity(bullet_entity)
             ServiceLocator.sounds_service.play(special_bullet_info["sound"])
 
@@ -189,10 +191,25 @@ def create_text(world: esper.World, interface_config: dict, position: pygame.Vec
     text_surface = font.render(
         interface_config["text"], True, pygame.Color(r,g,b))
     entity = world.create_entity()
+    world.add_component(entity, CTagText(interface_config["text"]))
     world.add_component(entity, CTransform(position))
     world.add_component(entity, CSurface.from_surface(text_surface))
 
     return entity
-    
 
+def create_text_surface(world: esper.World, interface_config: dict)-> int:
+    font_path = interface_config["font"]
+    text = interface_config["text"]
+    size = interface_config["size"]
+    r,g,b = tuple(interface_config["color"].values())
+    font = ServiceLocator.fonts_service.get(font_path, size)
+    color = pygame.Color(r,g,b)
+    position = pygame.Vector2(tuple(interface_config["position"].values()))
+    text_surface = font.render(text, True, color)
+    entity = world.create_entity()
+    world.add_component(entity, CTagText(text))
+    world.add_component(entity, CTransform(position))
+    world.add_component(entity, CSurface.from_surface(text_surface))
+
+    return entity
     

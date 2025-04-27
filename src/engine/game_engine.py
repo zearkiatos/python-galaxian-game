@@ -2,9 +2,10 @@ import pygame
 import esper
 import asyncio
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
+from src.ecs.components.c_state_special import CStateSpecial, StateSpecial
 from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
-from src.ecs.create.prefabric_creator import create_bullet_square, create_enemy_spawner, create_input_player, create_player_square, create_special_bullet, create_text
+from src.ecs.create.prefabric_creator import create_bullet_square, create_enemy_spawner, create_input_player, create_player_square, create_special_bullet, create_text, create_text_surface
 from src.ecs.systems.s_animation import system_animation
 from src.ecs.systems.s_bullet_limit import system_bullet_limit
 from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_enemy
@@ -21,6 +22,7 @@ from src.ecs.systems.s_rendering import system_rendering
 from src.ecs.systems.s_screen_bounce import system_screen_bounce
 from src.ecs.systems.s_enemy_spawner import system_enemy_spawner
 from src.ecs.systems.s_special_bullet_limit import system_special_bullet_limit
+from src.ecs.systems.s_special_counter import system_special_counter
 from src.utils.file_handler import read_json_file
 from src.ecs.components.c_velocity import CVelocity
 from src.config.config import Config
@@ -39,12 +41,16 @@ class GameEngine:
         else:
             self.screen = pygame.display.set_mode(sizes, 0)
         self.clock = pygame.time.Clock()
+        self.time = 0
         self.is_running = False
         self.framerate = self.window_config["framerate"]
         self.delta_time = 0
         self.bg_color = pygame.Color(background_color)
         self.pause = False
         self._paused_entity = None
+        self._special_bullet_capacity_entity = None
+        self._special_bullet_state: CStateSpecial = CStateSpecial(value=100.0, restrict_seconds=2.5)
+        self._special_bullet_state.state = StateSpecial.ACTIVE
 
         self.ecs_world = esper.World()
 
@@ -73,10 +79,11 @@ class GameEngine:
         create_text(self.ecs_world, self.interface_config["title"])
         create_text(self.ecs_world, self.interface_config["subtitle"])
         create_text(self.ecs_world, self.interface_config["special"])
-        create_text(self.ecs_world, self.interface_config["special_value"])
+        self._special_bullet_capacity_entity = create_text_surface(self.ecs_world, self.interface_config["special_value"])
 
     def _calculate_time(self):
         self.clock.tick(self.framerate)
+        self.time = pygame.time.get_ticks()/ 1000.0
         self.delta_time = self.clock.get_time() / 1000.0
 
     def _process_events(self):
@@ -107,6 +114,8 @@ class GameEngine:
             system_animation(self.ecs_world, self.delta_time)
             system_explode(self.ecs_world)
             system_special_bullet_limit(self.ecs_world)
+            current_time = pygame.time.get_ticks() / 1000.0
+            system_special_counter(self.ecs_world, self.interface_config["special_value"], self._special_bullet_capacity_entity, current_time, self._special_bullet_state)
         self.ecs_world._clear_dead_entities()
 
     def _draw(self):
@@ -156,7 +165,7 @@ class GameEngine:
                     create_bullet_square(
                         self.ecs_world, self.bullet_config, self._player_entity, event.pos)
         if c_input.name == "PLAYER_SPECIAL_FIRE" and not self.pause:
-            if c_input.phase == CommandPhase.START and (event.button == 3):
+            if c_input.phase == CommandPhase.START and (event.button == 3) and self._special_bullet_state.state == StateSpecial.ACTIVE:
                 create_special_bullet(
                     self.ecs_world, pygame.Vector2(-90, 90), self.power_ups_config["special_bullet"])
                 create_special_bullet(
@@ -165,6 +174,8 @@ class GameEngine:
                     self.ecs_world, pygame.Vector2(90, -90), self.power_ups_config["special_bullet"])
                 create_special_bullet(
                     self.ecs_world, pygame.Vector2(90, 90), self.power_ups_config["special_bullet"])
+                self._special_bullet_state.state = StateSpecial.IDLE
+                self._special_bullet_state.start_time = pygame.time.get_ticks() / 1000.0
 
         if c_input.name == "PAUSE":
             if c_input.phase == CommandPhase.START:
