@@ -49,6 +49,7 @@ class GameEngine:
         self.pause = False
         self._paused_entity = None
         self._special_bullet_capacity_entity = None
+        self._special_shield_capacity_entity = None
         self._special_bullet_state: CStateSpecial = CStateSpecial(value=100.0, restrict_seconds=2.5)
         self._special_bullet_state.state = StateSpecial.ACTIVE
 
@@ -79,7 +80,9 @@ class GameEngine:
         create_text(self.ecs_world, self.interface_config["title"])
         create_text(self.ecs_world, self.interface_config["subtitle"])
         create_text(self.ecs_world, self.interface_config["special"])
+        create_text(self.ecs_world, self.interface_config["special_shield"])
         self._special_bullet_capacity_entity = create_text_surface(self.ecs_world, self.interface_config["special_value"])
+        self._special_shield_capacity_entity = create_text_surface(self.ecs_world, self.interface_config["special_shield_value"])
 
     def _calculate_time(self):
         self.clock.tick(self.framerate)

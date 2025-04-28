@@ -3,5 +3,10 @@
         "sound": "assets/snd/laser_special.ogg",
         "image": "assets/img/bullet_especial.png",
         "velocity": 100
+    },
+    "special_shield": {
+        "sound": "assets/snd/shield.ogg",
+        "image": "assets/img/shield.png",
+        "velocity": 100
     }
 }

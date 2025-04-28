@@ -55,6 +55,34 @@
             "y": 330
         }
     },
+    "special_shield": {
+        "font": "assets/fnt/Audiowide-Regular.ttf",
+        "text": "SPECIAL SHIELD",
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "size": 12,
+        "position": {
+            "x": 100,
+            "y": 320
+        }
+    },
+    "special_shield_value": {
+        "font": "assets/fnt/Audiowide-Regular.ttf",
+        "text": "100%",
+        "color": {
+            "r": 0,
+            "g": 0,
+            "b": 255
+        },
+        "size": 12,
+        "position": {
+            "x": 100,
+            "y": 330
+        }
+    },
     "pause": {
         "font": "assets/fnt/Audiowide-Regular.ttf",
         "text": "Pause",
