@@ -7,6 +7,17 @@
     "special_shield": {
         "sound": "assets/snd/shield.ogg",
         "image": "assets/img/shield.png",
-        "velocity": 100
+        "velocity": 100,
+        "animations": {
+            "number_frames": 4,
+            "list": [
+                {
+                    "name": "MOVE",
+                    "start": 0,
+                    "end": 3,
+                    "framerate": 10
+                }
+            ]
+        }
     }
 }

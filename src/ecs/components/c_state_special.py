@@ -8,5 +8,6 @@ class CStateSpecial:
         self.start_time = 0.0
 
 class StateSpecial(Enum):
+    NONE = -1
     IDLE = 0
     ACTIVE = 1

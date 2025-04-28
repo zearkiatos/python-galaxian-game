@@ -13,9 +13,9 @@ def system_input_player(world: esper.World, event: pygame.event.Event, do_action
         elif event.type == pygame.KEYUP and c_input.key == event.key:
             c_input.phase = CommandPhase.END
             do_action(c_input, None)
-        elif event.type == pygame.MOUSEBUTTONDOWN and c_input.key != pygame.K_p:
+        elif event.type == pygame.MOUSEBUTTONDOWN and (c_input.key != pygame.K_p and c_input != pygame.K_ESCAPE):
             c_input.phase = CommandPhase.START
             do_action(c_input, event)
-        elif event.type == pygame.MOUSEBUTTONUP and c_input.key != pygame.K_p:
+        elif event.type == pygame.MOUSEBUTTONUP and (c_input.key != pygame.K_p and c_input != pygame.K_SPACE):
             c_input.phase = CommandPhase.END
             do_action(c_input, event)

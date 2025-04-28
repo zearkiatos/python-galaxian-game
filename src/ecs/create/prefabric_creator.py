@@ -20,6 +20,7 @@ from src.ecs.components.tags.c_tag_enemy_asteroid import CTagEnemyAsteroid
 from src.ecs.components.tags.c_tag_explosion import CTagExplosion
 from src.ecs.components.tags.c_tag_player import CTagPlayer
 from src.ecs.components.tags.c_tag_special_bullet import CTagSpecialBullet
+from src.ecs.components.tags.c_tag_special_shield import CTagSpecialShield
 from src.ecs.components.tags.c_tag_text import CTagText
 from src.engine.service_locator import ServiceLocator
 
@@ -115,6 +116,8 @@ def create_input_player(world: esper.World):
     input_pause = world.create_entity()
     input_left_mouse = world.create_entity()
     input_right_mouse = world.create_entity()
+    input_shield = world.create_entity()
+    world.add_component(input_shield, CInputCommand("PLAYER_SPECIAL_SHIELD", pygame.K_SPACE))
     world.add_component(input_left, CInputCommand("PLAYER_LEFT", pygame.K_LEFT))
     world.add_component(input_right, CInputCommand("PLAYER_RIGHT", pygame.K_RIGHT))
     world.add_component(input_up, CInputCommand("PLAYER_UP", pygame.K_UP))
@@ -212,4 +215,21 @@ def create_text_surface(world: esper.World, interface_config: dict)-> int:
     world.add_component(entity, CSurface.from_surface(text_surface))
 
     return entity
+
+def create_special_shield(world: esper.World, special_shield_info: dict, player_entity: int) -> int:
+    player_transform = world.component_for_entity(player_entity, CTransform)
+    player_velocity = world.component_for_entity(player_entity, CVelocity)
+
+    shield_surface = ServiceLocator.images_service.get(special_shield_info["image"])
+    player_position_copy = player_transform.position.copy()
+    shield_position = pygame.Vector2(
+        player_position_copy.x - 6,
+        player_position_copy.y - 10
+    )
+    shield_entity = create_sprite(world, shield_position, player_velocity.velocity.copy(), shield_surface)
+    world.add_component(shield_entity, CTagSpecialShield())
+    world.add_component(shield_entity, CAnimation(special_shield_info["animations"]))
+    ServiceLocator.sounds_service.play(special_shield_info["sound"])
+
+    return shield_entity
     

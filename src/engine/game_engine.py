@@ -5,7 +5,7 @@ from src.ecs.components.c_input_command import CInputCommand, CommandPhase
 from src.ecs.components.c_state_special import CStateSpecial, StateSpecial
 from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
-from src.ecs.create.prefabric_creator import create_bullet_square, create_enemy_spawner, create_input_player, create_player_square, create_special_bullet, create_text, create_text_surface
+from src.ecs.create.prefabric_creator import create_bullet_square, create_enemy_spawner, create_input_player, create_player_square, create_special_bullet, create_special_shield, create_text, create_text_surface
 from src.ecs.systems.s_animation import system_animation
 from src.ecs.systems.s_bullet_limit import system_bullet_limit
 from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_enemy
@@ -23,6 +23,7 @@ from src.ecs.systems.s_screen_bounce import system_screen_bounce
 from src.ecs.systems.s_enemy_spawner import system_enemy_spawner
 from src.ecs.systems.s_special_bullet_limit import system_special_bullet_limit
 from src.ecs.systems.s_special_counter import system_special_counter
+from src.ecs.systems.s_special_shield_movement import system_special_shield_movement
 from src.utils.file_handler import read_json_file
 from src.ecs.components.c_velocity import CVelocity
 from src.config.config import Config
@@ -52,6 +53,8 @@ class GameEngine:
         self._special_shield_capacity_entity = None
         self._special_bullet_state: CStateSpecial = CStateSpecial(value=100.0, restrict_seconds=2.5)
         self._special_bullet_state.state = StateSpecial.ACTIVE
+        self._special_shield_state: CStateSpecial = CStateSpecial(value=100.0, restrict_seconds=5.0)
+        self._special_shield_state.state = StateSpecial.ACTIVE
 
         self.ecs_world = esper.World()
 
@@ -119,6 +122,8 @@ class GameEngine:
             system_special_bullet_limit(self.ecs_world)
             current_time = pygame.time.get_ticks() / 1000.0
             system_special_counter(self.ecs_world, self.interface_config["special_value"], self._special_bullet_capacity_entity, current_time, self._special_bullet_state)
+            system_special_shield_movement(self.ecs_world, self._player_entity)
+            system_special_counter(self.ecs_world, self.interface_config["special_shield_value"], self._special_shield_capacity_entity, current_time, self._special_shield_state)
         self.ecs_world._clear_dead_entities()
 
     def _draw(self):
@@ -179,6 +184,11 @@ class GameEngine:
                     self.ecs_world, pygame.Vector2(90, 90), self.power_ups_config["special_bullet"])
                 self._special_bullet_state.state = StateSpecial.IDLE
                 self._special_bullet_state.start_time = pygame.time.get_ticks() / 1000.0
+        if c_input.name == "PLAYER_SPECIAL_SHIELD" and not self.pause:
+            if c_input.phase == CommandPhase.START and self._special_shield_state.state == StateSpecial.ACTIVE:
+                create_special_shield(self.ecs_world, self.power_ups_config["special_shield"], self._player_entity)
+                self._special_shield_state.state = StateSpecial.IDLE
+                self._special_shield_state.start_time = pygame.time.get_ticks() / 1000.0
 
         if c_input.name == "PAUSE":
             if c_input.phase == CommandPhase.START:
