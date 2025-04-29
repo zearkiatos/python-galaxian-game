@@ -65,7 +65,8 @@ $ python3 main.py
 
 # Game
 
-![WhatsApp GIF 2025-04-13 at 19 40 12](https://github.com/user-attachments/assets/457aafef-9b52-4106-bec3-29e68e4fc173)
+![WhatsApp GIF 2025-04-29 at 00 02 21](https://github.com/user-attachments/assets/467c737e-269a-404e-93b9-786317be0236)
+
 
 
 
