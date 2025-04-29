@@ -13,7 +13,7 @@ def system_special_counter(world: esper.World, interface_config: dict, entity_sp
     r, g, b = tuple(interface_config["color"].values())
     position = pygame.Vector2(tuple(interface_config["position"].values()))
     surface = world.component_for_entity(entity_special, CSurface)
-    if state.state == StateSpecial.IDLE:
+    if state.state == StateSpecial.IDLE or state.state == StateSpecial.NONE:
         time_passed = current_time - state.start_time
         percentage = int((time_passed / state.restrict_seconds)* 100)
         if  time_passed > state.restrict_seconds:

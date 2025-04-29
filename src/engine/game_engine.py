@@ -23,6 +23,7 @@ from src.ecs.systems.s_screen_bounce import system_screen_bounce
 from src.ecs.systems.s_enemy_spawner import system_enemy_spawner
 from src.ecs.systems.s_special_bullet_limit import system_special_bullet_limit
 from src.ecs.systems.s_special_counter import system_special_counter
+from src.ecs.systems.s_special_shield_limit import system_special_shield_limit
 from src.ecs.systems.s_special_shield_movement import system_special_shield_movement
 from src.utils.file_handler import read_json_file
 from src.ecs.components.c_velocity import CVelocity
@@ -51,9 +52,10 @@ class GameEngine:
         self._paused_entity = None
         self._special_bullet_capacity_entity = None
         self._special_shield_capacity_entity = None
+        self.entity_shield = None
         self._special_bullet_state: CStateSpecial = CStateSpecial(value=100.0, restrict_seconds=2.5)
         self._special_bullet_state.state = StateSpecial.ACTIVE
-        self._special_shield_state: CStateSpecial = CStateSpecial(value=100.0, restrict_seconds=5.0)
+        self._special_shield_state: CStateSpecial = CStateSpecial(value=100.0, restrict_seconds=5.0,duration_time=2.5)
         self._special_shield_state.state = StateSpecial.ACTIVE
 
         self.ecs_world = esper.World()
@@ -124,6 +126,8 @@ class GameEngine:
             system_special_counter(self.ecs_world, self.interface_config["special_value"], self._special_bullet_capacity_entity, current_time, self._special_bullet_state)
             system_special_shield_movement(self.ecs_world, self._player_entity)
             system_special_counter(self.ecs_world, self.interface_config["special_shield_value"], self._special_shield_capacity_entity, current_time, self._special_shield_state)
+            if self.entity_shield:
+                system_special_shield_limit(self.ecs_world, self._special_shield_state, self.entity_shield, current_time)
         self.ecs_world._clear_dead_entities()
 
     def _draw(self):
@@ -186,7 +190,7 @@ class GameEngine:
                 self._special_bullet_state.start_time = pygame.time.get_ticks() / 1000.0
         if c_input.name == "PLAYER_SPECIAL_SHIELD" and not self.pause:
             if c_input.phase == CommandPhase.START and self._special_shield_state.state == StateSpecial.ACTIVE:
-                create_special_shield(self.ecs_world, self.power_ups_config["special_shield"], self._player_entity)
+                self.entity_shield = create_special_shield(self.ecs_world, self.power_ups_config["special_shield"], self._player_entity)
                 self._special_shield_state.state = StateSpecial.IDLE
                 self._special_shield_state.start_time = pygame.time.get_ticks() / 1000.0
 
