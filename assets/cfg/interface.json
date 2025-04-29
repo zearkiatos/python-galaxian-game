@@ -15,7 +15,7 @@
     },
     "subtitle": {
         "font": "assets/fnt/Audiowide-Regular.ttf",
-        "text": "Controls: Arrows, normal click, right click = special bullet, [SPACE] = shield",
+        "text": "Controls: Arrows, normal click, right click = special bullet, [SPACE] = shield, [P] = pause",
         "color": {
             "r": 255,
             "g": 255,
