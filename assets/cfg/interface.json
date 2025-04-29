@@ -1,0 +1,96 @@
+{
+    "title": {
+        "font": "assets/fnt/Audiowide-Regular.ttf",
+        "text": "PYTHON 🐍 GALAXIAN 🚀🛸☄️ GAME - EXERCISE 4",
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "size": 12,
+        "position": {
+            "x": 10,
+            "y": 5
+        }
+    },
+    "subtitle": {
+        "font": "assets/fnt/Audiowide-Regular.ttf",
+        "text": "Controls: Arrows, normal click, right click = special bullet, [SPACE] = shield, [P] = pause",
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 0
+        },
+        "size": 10,
+        "position": {
+            "x": 10,
+            "y": 30
+        }
+    },
+    "special": {
+        "font": "assets/fnt/Audiowide-Regular.ttf",
+        "text": "SPECIAL",
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "size": 12,
+        "position": {
+            "x": 10,
+            "y": 320
+        }
+    },
+    "special_value": {
+        "font": "assets/fnt/Audiowide-Regular.ttf",
+        "text": "100%",
+        "color": {
+            "r": 0,
+            "g": 255,
+            "b": 0
+        },
+        "size": 10,
+        "position": {
+            "x": 10,
+            "y": 330
+        }
+    },
+    "special_shield": {
+        "font": "assets/fnt/Audiowide-Regular.ttf",
+        "text": "SPECIAL SHIELD",
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "size": 12,
+        "position": {
+            "x": 100,
+            "y": 320
+        }
+    },
+    "special_shield_value": {
+        "font": "assets/fnt/Audiowide-Regular.ttf",
+        "text": "100%",
+        "color": {
+            "r": 0,
+            "g": 0,
+            "b": 255
+        },
+        "size": 12,
+        "position": {
+            "x": 100,
+            "y": 330
+        }
+    },
+    "pause": {
+        "font": "assets/fnt/Audiowide-Regular.ttf",
+        "text": "Pause",
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "size": 12
+    }
+}

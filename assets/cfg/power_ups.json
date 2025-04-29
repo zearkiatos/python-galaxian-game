@@ -1,0 +1,24 @@
+{
+    "special_bullet": {
+        "sound": "assets/snd/laser_special.ogg",
+        "image": "assets/img/bullet_especial.png",
+        "velocity": 100
+    },
+    "special_shield": {
+        "sound": "assets/snd/shield.ogg",
+        "image": "assets/img/shield.png",
+        "velocity": 100,
+        "minimal_distance": 50,
+        "animations": {
+            "number_frames": 4,
+            "list": [
+                {
+                    "name": "MOVE",
+                    "start": 0,
+                    "end": 3,
+                    "framerate": 10
+                }
+            ]
+        }
+    }
+}
