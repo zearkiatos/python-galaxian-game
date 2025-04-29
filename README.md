@@ -6,6 +6,11 @@ This is a game of a ship that try to destroy asteroids, hunter ships🛸 ☄️ 
 
 [![Python](https://img.shields.io/badge/python-2b5b84?style=for-the-badge&logo=python&logoColor=white&labelColor=000000)]()
 
+# Game Published 🎮
+
+[https://zearkiatos.itch.io/python-galaxian-game](https://zearkiatos.itch.io/python-galaxian-game)
+
+
 # How to run
 
 ## How to install
