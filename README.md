@@ -39,20 +39,20 @@ $ pip3 install -r requirements.txt
 
 ## How to run the game 🎮
 
-### How to install in mac 🍎 and linux 🐧
+### How to run in mac 🍎 and linux 🐧
 
 ```sh
 $ make run
 
 #or
 
-$ sh run.sh; run
+$ sh run.sh; run-web
 ```
 
-### How to install in Windows 🪟
+### How to run in Windows 🪟
 
 ```sh
-$ sh run.sh; run
+$ sh run.sh; run-web
 ```
 
 ### Only with python and for all systems
@@ -61,6 +61,21 @@ $ sh run.sh; run
 $ python3 main.py
 ```
 
+## How to run the game 🎮 on a web 
+
+### How to run in mac 🍎 and linux 🐧 on a web
+
+```sh
+$ make run-web
+
+#or
+
+$ rm -rf build
+$ mkdir -p build/web
+$ cp -rf assets build/web || true
+$ cp -rf esper build/web || true
+$ PYGBAG=1 pygbag main.py || echo "pygbag build completed"
+```
 
 
 # Game
