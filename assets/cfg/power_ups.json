@@ -8,6 +8,7 @@
         "sound": "assets/snd/shield.ogg",
         "image": "assets/img/shield.png",
         "velocity": 100,
+        "minimal_distance": 50,
         "animations": {
             "number_frames": 4,
             "list": [

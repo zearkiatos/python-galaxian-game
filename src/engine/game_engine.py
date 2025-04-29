@@ -10,6 +10,7 @@ from src.ecs.systems.s_animation import system_animation
 from src.ecs.systems.s_bullet_limit import system_bullet_limit
 from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_enemy
 from src.ecs.systems.s_collision_player_enemy import system_collision_player_enemy
+from src.ecs.systems.s_collision_shield_enemy import system_collision_shield_enemy
 from src.ecs.systems.s_collision_special_bullet_enemy import system_collision_special_bullet_enemy
 from src.ecs.systems.s_explode import system_explode
 from src.ecs.systems.s_hunter_limit import system_hunter_limit
@@ -128,7 +129,8 @@ class GameEngine:
             system_special_counter(self.ecs_world, self.interface_config["special_shield_value"], self._special_shield_capacity_entity, current_time, self._special_shield_state)
             if self.entity_shield:
                 system_special_shield_limit(self.ecs_world, self._special_shield_state, self.entity_shield, current_time)
-        self.ecs_world._clear_dead_entities()
+                system_collision_shield_enemy(self.ecs_world, self.entity_shield, self._special_shield_state, self.power_ups_config["special_shield"], self.explosion_config)
+            self.ecs_world._clear_dead_entities()
 
     def _draw(self):
         self.screen.fill(self.bg_color)
